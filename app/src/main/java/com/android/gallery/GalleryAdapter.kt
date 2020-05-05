@@ -23,7 +23,7 @@ class GalleryAdapter : ListAdapter<PhotoItem, MyViewHolder>(DiffCallback) {
         )
         holder.itemView.setOnClickListener {
             Bundle().apply {
-//                putParcelable("PHOTO", getItem(holder.adapterPosition))
+                //                putParcelable("PHOTO", getItem(holder.adapterPosition))
                 putParcelableArrayList("PHOTO_LIST", ArrayList(currentList))
                 putInt("PHOTO_POSITION", holder.adapterPosition)
                 holder.itemView.findNavController()
@@ -35,14 +35,20 @@ class GalleryAdapter : ListAdapter<PhotoItem, MyViewHolder>(DiffCallback) {
     }
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-        holder.itemView.shimmerLayoutCell.apply {
-            setShimmerColor(0x55FFFFFF)
-            setShimmerAngle(0)
-            startShimmerAnimation()
+        val photoItem: PhotoItem = getItem(position)
+        with(holder.itemView) {
+            shimmerLayoutCell.apply {
+                setShimmerColor(0x55FFFFFF)
+                setShimmerAngle(0)
+                startShimmerAnimation()
+            }
+            textViewUser.text = photoItem.photoUser
+            textViewFavorites.text = photoItem.photoFavorites.toString()
+            textViewLikes.text = photoItem.photoLikes.toString()
+            layoutParams.height = photoItem.photoHeight
         }
-        holder.itemView.layoutParams.height = getItem(position).photoHeight
         Glide.with(holder.itemView)
-            .load(getItem(position).previewUrl)
+            .load(photoItem.previewUrl)
             .placeholder(R.drawable.ic_photo_gray_24dp)
             .listener(object : RequestListener<Drawable> {
                 override fun onLoadFailed(
